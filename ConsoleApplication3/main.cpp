@@ -1,4 +1,5 @@
-﻿#include <iostream>
+#include "pch.h"
+#include <iostream>
 #include <windows.h>
 #include <thread>
 #include <chrono>
@@ -6,6 +7,11 @@
 using namespace std;
 
 INPUT ip;
+
+void generate_title_color() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, 11);
+}
 
 string title = R"(
                               |__/                                                            
@@ -16,8 +22,6 @@ string title = R"(
  /$$$$$$$$|  $$$$$$$ /$$$$$$$$| $$      | $$ | $$ | $$|  $$$$$$$|  $$$$$$$| $$      |  $$$$$$/
 |________/ \_______/|________/|__/      |__/ |__/ |__/ \_______/ \_______/|__/       \______/
 )";
-
-string additional_text = "By zezi";
 
 void clear_screen() {
     system("CLS");
@@ -30,8 +34,8 @@ void set_console_title() {
 void print_status() {
     clear_screen();
     set_console_title();
-
-    cout << title << endl << additional_text << endl;
+    generate_title_color();
+    cout << title << endl;
 }
 
 void run_macro(bool macro) {
@@ -41,12 +45,12 @@ void run_macro(bool macro) {
         ip.mi.mouseData = WHEEL_DELTA;
         SendInput(1, &ip, sizeof(INPUT));
 
-        this_thread::sleep_for(chrono::microseconds(1));
+        this_thread::sleep_for(chrono::milliseconds(1));
 
         ip.mi.mouseData = -WHEEL_DELTA;
         SendInput(1, &ip, sizeof(INPUT));
 
-        this_thread::sleep_for(chrono::microseconds(1));
+        this_thread::sleep_for(chrono::milliseconds(1));
     }
 }
 
@@ -55,8 +59,12 @@ int main() {
 
     bool macro = false;
     while (true) {
+        if (GetAsyncKeyState(VK_XBUTTON2)) {
+            macro = !macro;
+            while (GetAsyncKeyState(VK_XBUTTON2)) {}
+        }
         run_macro(macro);
-        this_thread::sleep_for(chrono::microseconds(1));
+        this_thread::sleep_for(chrono::milliseconds(1));
     }
 
     cin.get();

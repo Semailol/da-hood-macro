@@ -45,12 +45,12 @@ void run_macro(bool macro) {
         ip.mi.mouseData = WHEEL_DELTA;
         SendInput(1, &ip, sizeof(INPUT));
 
-        this_thread::sleep_for(chrono::milliseconds(1));
+        this_thread::sleep_for(chrono::microseconds(1));
 
         ip.mi.mouseData = -WHEEL_DELTA;
         SendInput(1, &ip, sizeof(INPUT));
 
-        this_thread::sleep_for(chrono::milliseconds(1));
+        this_thread::sleep_for(chrono::microseconds(1));
     }
 }
 
@@ -64,7 +64,7 @@ int main() {
             while (GetAsyncKeyState(VK_XBUTTON2)) {}
         }
         run_macro(macro);
-        this_thread::sleep_for(chrono::milliseconds(1));
+        this_thread::sleep_for(chrono::microseconds(1));
     }
 
     cin.get();
